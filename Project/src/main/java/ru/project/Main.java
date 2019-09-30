@@ -1,6 +1,6 @@
 package ru.project;
 
-import ru.downloader.Threads;
+import ru.downl.Threads;
 
 public class Main {
     public static void main(String[] args) {

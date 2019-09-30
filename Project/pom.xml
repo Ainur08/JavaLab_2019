@@ -6,8 +6,15 @@
 
     <dependencies>
         <dependency>
-            <groupId>ru.downloader</groupId>
-            <artifactId>downloader</artifactId>
+            <groupId>javax.servlet</groupId>
+            <artifactId>servlet-api</artifactId>
+            <version>2.5</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>ru.downl</groupId>
+            <artifactId>downl</artifactId>
             <version>0.0.1</version>
         </dependency>
     </dependencies>
