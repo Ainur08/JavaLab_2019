@@ -25,12 +25,17 @@ public class Threads extends Thread {
             System.out.println("Thread N" + count + " started");
             URL url = new URL(adress);
             URLConnection connection = url.openConnection(); //устанавливаем соединение
-
             InputStream inputStream = connection.getInputStream();
-            Files.copy(inputStream, new File(type).toPath());
-            System.out.println("Thread N" + count + " finished");
+
+            if (new File(type).exists()) {
+                System.out.println("Файл уже существует, Thread N" + count + " finished");
+            } else {
+                Files.copy(inputStream, new File(type).toPath());
+                System.out.println("Thread N" + count + " finished");
+            }
         } catch (IOException e) {
             throw new IllegalArgumentException("Неверно введена(ы) ссылка(и) или файл уже существует");
         }
     }
 }
+
