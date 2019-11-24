@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="dataSourceStorageLocal">
-    <data-source name="javalab@localhost" uuid="8a2961a2-24e7-4153-a34b-e64e28f8a060">
-      <database-info product="PostgreSQL" version="12.0" jdbc-version="4.2" driver-name="PostgreSQL JDBC Driver" driver-version="42.2.5" dbms="POSTGRES" exact-version="12.0" exact-driver-version="42.2">
+    <data-source name="javalaba@localhost" uuid="a4f1e091-471a-4df0-bb33-1553f580c5ba">
+      <database-info product="PostgreSQL" version="10.10" jdbc-version="4.2" driver-name="PostgreSQL JDBC Driver" driver-version="42.2.5" dbms="POSTGRES" exact-version="10.10" exact-driver-version="42.2">
         <identifier-quote-string>&quot;</identifier-quote-string>
       </database-info>
       <case-sensitivity plain-identifiers="lower" quoted-identifiers="exact" />
       <secret-storage>master_key</secret-storage>
       <user-name>postgres</user-name>
-      <introspection-schemas>@:@|javalab:public</introspection-schemas>
+      <introspection-schemas>@:@</introspection-schemas>
     </data-source>
   </component>
 </project>

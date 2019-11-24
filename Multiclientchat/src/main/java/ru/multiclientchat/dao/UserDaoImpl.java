@@ -1,5 +1,7 @@
 package ru.multiclientchat.dao;
 
+import ru.multiclientchat.config.ConnectionConfig;
+import ru.multiclientchat.model.AuthData;
 import ru.multiclientchat.model.User;
 
 import java.sql.Connection;
@@ -8,40 +10,81 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class UserDaoImpl implements UserDao {
-    private Connection connection;
-    private static final String SAVE = "INSERT INTO chat_user(login, password) " +
-            "VALUES (?, ?)";
-    private static final String FIND = "SELECT * FROM shop_user " + "WHERE username = ?";
-
-    public UserDaoImpl(Connection connection) {
-        this.connection = connection;
-    }
+    private final ConnectionConfig CONFIG = ConnectionConfig.getInstance();
+    private final String UPDATE_VERIFIER = "UPDATE chat_user SET verifier = ? WHERE id = ?";
+    private final String FIND_VERIFIER_BY_ID = "SELECT verifier FROM chat_user WHERE id = ?";
+    private static final String FIND = "SELECT * FROM chat_user WHERE login = ?";
+    private final String FIND_BY_ID = "SELECT * FROM chat_user WHERE id = ?";
 
     public void save(User model) {
-        try (PreparedStatement stmt = connection.prepareStatement(SAVE)) {
-            String login = model.getLogin();
-            String password = model.getPassword();
-            stmt.setString(1, login);
-            stmt.setString(2, password);
+    }
+
+    @Override
+    public void delete(User model) {
+    }
+
+    public User findOneByUsername(String username) {
+        User user = new User();
+        Connection connection = CONFIG.getConnection();
+        try (PreparedStatement stmt = connection.prepareStatement(FIND)) {
+            stmt.setString(1, username);
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    AuthData authData = new AuthData();
+                    authData.setLogin(rs.getString("login"));
+                    authData.setPassword(rs.getString("password"));
+                    user.setAuthData(authData);
+                    user.setId(rs.getInt("id"));
+                    user.setName(rs.getString("name"));
+                    user.setRole(rs.getString("role"));
+                    return user;
+                }
+                return null;
+            }
+        } catch (SQLException e) {
+            throw new IllegalStateException(e);
+        }
+    }
+
+    public void updateVerifier(String verifier, Integer id) {
+        Connection connection = CONFIG.getConnection();
+        try (PreparedStatement stmt = connection.prepareStatement(UPDATE_VERIFIER)) {
+            stmt.setString(1, verifier);
+            stmt.setInt(2, id);
             stmt.executeUpdate();
         } catch (SQLException e) {
             throw new IllegalStateException(e);
         }
     }
 
-    public User findOneByUsername(String username) {
-        try (PreparedStatement stmt = connection.prepareStatement(FIND)) {
-            stmt.setString(1, username);
-            try (ResultSet rs = stmt.executeQuery()) {
-                User user = null;
-                if (rs.next()) {
-                    user.setId(rs.getInt("id"));
-                    user.setLogin(rs.getString("login"));
-                    user.setPassword(rs.getString("password"));
-                    return user;
-                }
-                return null;
+    public String findVerifierById(Integer id) {
+        String verifier = null;
+        Connection connection = CONFIG.getConnection();
+        try (PreparedStatement stmt = connection.prepareStatement(FIND_VERIFIER_BY_ID)) {
+            stmt.setInt(1, id);
+            ResultSet set = stmt.executeQuery();
+            if (set.next()) {
+                verifier = set.getString("verifier");
             }
+            return verifier;
+        } catch (SQLException e) {
+            throw new IllegalStateException(e);
+        }
+    }
+
+    public User findUserById(Integer id) {
+        User user = null;
+        Connection connection = CONFIG.getConnection();
+        try (PreparedStatement stmt = connection.prepareStatement(FIND_BY_ID)) {
+            stmt.setInt(1, id);
+            ResultSet set = stmt.executeQuery();
+            if (set.next()) {
+                user = new User();
+                user.setId(set.getInt("id"));
+                user.setRole(set.getString("role"));
+                user.setName(set.getString("name"));
+            }
+            return user;
         } catch (SQLException e) {
             throw new IllegalStateException(e);
         }

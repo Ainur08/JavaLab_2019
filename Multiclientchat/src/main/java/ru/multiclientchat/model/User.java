@@ -2,16 +2,9 @@ package ru.multiclientchat.model;
 
 public class User {
     private int id;
-    private String login;
-    private String password;
-
-    public User() {
-    }
-
-    public User(String login, String password) {
-        this.login = login;
-        this.password = password;
-    }
+    private String name;
+    private String role;
+    private AuthData authData;
 
     public int getId() {
         return id;
@@ -21,19 +14,27 @@ public class User {
         this.id = id;
     }
 
-    public String getLogin() {
-        return login;
+    public String getName() {
+        return name;
     }
 
-    public void setLogin(String login) {
-        this.login = login;
+    public void setName(String name) {
+        this.name = name;
     }
 
-    public String getPassword() {
-        return password;
+    public String getRole() {
+        return role;
     }
 
-    public void setPassword(String password) {
-        this.password = password;
+    public void setRole(String role) {
+        this.role = role;
+    }
+
+    public AuthData getAuthData() {
+        return authData;
+    }
+
+    public void setAuthData(AuthData authData) {
+        this.authData = authData;
     }
 }

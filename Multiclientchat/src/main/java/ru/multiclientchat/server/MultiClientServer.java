@@ -1,9 +1,10 @@
 package ru.multiclientchat.server;
 
+import ru.multiclientchat.controller.PayloadController;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
@@ -32,7 +33,7 @@ public class MultiClientServer {
         }
     }
 
-    private class ClientHandler extends Thread {
+    public class ClientHandler extends Thread {
         private Socket clientSocket;
         private BufferedReader reader;
         private String login;
@@ -42,11 +43,17 @@ public class MultiClientServer {
             clients.add(this);
             try {
                 reader = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
-                this.login = reader.readLine();
-                System.out.println("Новый участник: " + "<" + this.login + ">");
             } catch (Exception e) {
                 throw new IllegalStateException(e);
             }
+        }
+
+        public Socket getClientSocket() {
+            return clientSocket;
+        }
+
+        public void setClientSocket(Socket clientSocket) {
+            this.clientSocket = clientSocket;
         }
 
         @Override
@@ -55,42 +62,17 @@ public class MultiClientServer {
                 reader = new BufferedReader(
                         new InputStreamReader(
                                 clientSocket.getInputStream()));
+                PayloadController payloadController = new PayloadController(clientSocket, clients, this);
                 String line;
-                // участник подключился
-                for (ClientHandler client :
-                        clients) {
-                    PrintWriter out = new PrintWriter(client.clientSocket.getOutputStream(), true);
-                    out.println(this.login + " joined the chat");
-                }
-
                 while ((line = reader.readLine()) != null) {
-                    // участник отключился
-                    if (line.contains("stop")) {
-                        for (ClientHandler client :
-                                clients) {
-                            PrintWriter out = new PrintWriter(client.clientSocket.getOutputStream(), true);
-                            out.println(this.login + " left the chat");
-                        }
-                        removeClient();
-                        break;
-                        // участник отправил сообщение
-                    } else {
-                        for (ClientHandler client : clients) {
-                            PrintWriter writer = new PrintWriter(
-                                    client.clientSocket.getOutputStream(), true);
-                            writer.println(line);
-                        }
-                    }
+                    System.out.println(line);
+                    payloadController.handleRequest(line);
                 }
                 reader.close();
                 clientSocket.close();
             } catch (IOException e) {
                 throw new IllegalStateException(e);
             }
-        }
-
-        public void removeClient() {
-            clients.remove(this);
         }
     }
 }

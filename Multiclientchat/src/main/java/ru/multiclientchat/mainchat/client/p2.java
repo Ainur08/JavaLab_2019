@@ -4,9 +4,10 @@ import ru.multiclientchat.ChatClient;
 import ru.multiclientchat.controller.MenuController;
 
 import java.util.Scanner;
+
 import static ru.multiclientchat.config.ConnectionConfig.setDbProperty;
 
-public class ChatClientMain {
+public class p2 {
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
         setDbProperty();

@@ -1,7 +1,6 @@
 package ru.multiclientchat.model;
 
 public class Message {
-    private int id;
     private int idUser;
     private String dateTime;
     private String message;
@@ -13,14 +12,6 @@ public class Message {
         this.idUser = idUser;
         this.dateTime = dateTime;
         this.message = message;
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
     }
 
     public int getIdUser() {
